@@ -1,30 +1,48 @@
 
-public class GenericRepo<TEntity>(AppDbContext dbContext) : IGeneric<TEntity> where TEntity : class
+using Microsoft.EntityFrameworkCore;
+
+public class GenericRepo<TEntity>(AppDbContext Context) : IGeneric<TEntity> where TEntity : class
 
 
 {
-    public Task<TEntity> CreateAsync(TEntity entity)
+    public async Task<int> CreateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        Context.Set<TEntity>().Add(entity);
+        return await Context.SaveChangesAsync();
+
     }
 
-    public Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await Context.Set<TEntity>().FindAsync(id);
+        if (entity == null)
+        {
+            throw new ItemNotFoundException($"item with  {id} is not found");
+        }
+        Context.Set<TEntity>().Remove(entity);
+        await Context.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var entities = await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+        // AsNoTracking() تستخدم للتحديث البيانات في قاعدة البيانات بدون تتبع الالمان للتغييرات المصدرية
+        return entities;
     }
 
-    public Task<TEntity> GetByIdAsync(int id)
+    public async Task<TEntity> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await Context.Set<TEntity>().FindAsync(id);
+        if (entity == null)
+        {
+            throw new ItemNotFoundException($"item with  {id} is not found");
+        }
+        return entity;
     }
 
-    public Task<TEntity> UpdateAsync(TEntity entity)
+    public async Task<int> UpdateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        Context.Set<TEntity>().Update(entity);
+        return await Context.SaveChangesAsync();
     }
 }
