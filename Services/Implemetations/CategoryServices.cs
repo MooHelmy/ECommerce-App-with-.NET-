@@ -33,8 +33,15 @@ public class CategoryServices(IGeneric<Category> categoryInterface) : ICategoryS
 
     public async Task<ServicesResponse> UpdateAsync(UpdateCategory category)
     {
-        Category categoryEntity = category.CategoryToEntityMapper();
-        var result = await categoryInterface.UpdateAsync(categoryEntity);
+        var existingCategory = await categoryInterface.GetByIdAsync(category.Id);
+        if (existingCategory == null)
+        {
+            return new ServicesResponse(false, "Category not found");
+        }
+
+        var updatedCategory = category.ApplyUpdateTo(existingCategory);
+
+        var result = await categoryInterface.UpdateAsync(updatedCategory);
         return result > 0 ? new ServicesResponse(true, "Category updated successfully")
             : new ServicesResponse(false, "Category not updated");
     }

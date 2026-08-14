@@ -20,8 +20,8 @@ public static class ServicesContainer
         services.AddScoped<IGeneric<Category>, GenericRepo<Category>>();
 
         // Application Services
-        services.AddScoped<IProductServices, ProductServices>();      // ✅ إضافة جديدة
-        services.AddScoped<ICategoryServices, CategoryServices>();    // ✅ إضافة جديدة
+        services.AddScoped<IProductServices, ProductServices>();
+        services.AddScoped<ICategoryServices, CategoryServices>();
 
         return services;
     }

@@ -33,8 +33,14 @@ public class ProductServices(IGeneric<Product> productInterface) : IProductServi
 
     public async Task<ServicesResponse> UpdateAsync(UpdateProduct product)
     {
-        Product productEntity = product.ProductToEntityMapper();
-        var result = await productInterface.UpdateAsync(productEntity);
+        var existingProduct = await productInterface.GetByIdAsync(product.Id);
+        if (existingProduct == null)
+        {
+            return new ServicesResponse(false, "Product not found");
+        }
+        var updatedProduct = product.ApplyUpdateTo(existingProduct);
+
+        var result = await productInterface.UpdateAsync(updatedProduct);
         return result > 0 ? new ServicesResponse(true, "Product updated successfully")
             : new ServicesResponse(false, "Product not updated");
     }
