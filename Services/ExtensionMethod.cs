@@ -7,7 +7,7 @@ public static class ExtensionMethod
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
-            ImageUrl = product.ImageUrl,
+            ImageUrl = product.Base64Image,
             Quantity = product.Quantity,
             CategoryId = product.CategoryId
         };
@@ -20,7 +20,7 @@ public static class ExtensionMethod
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
-            ImageUrl = product.ImageUrl,
+            ImageUrl = product.Base64Image,
             Quantity = product.Quantity,
             CategoryId = product.CategoryId
         };
@@ -33,7 +33,7 @@ public static class ExtensionMethod
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
-            ImageUrl = product.ImageUrl,
+            Base64Image = product.ImageUrl,
             Quantity = product.Quantity,
             Category = new GetCategory
             {
