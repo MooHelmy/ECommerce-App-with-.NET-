@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 
-public class AppDbContext(DbContextOptions options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

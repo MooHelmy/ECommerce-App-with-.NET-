@@ -4,5 +4,5 @@ public interface IGeneric<TEntity> where TEntity : class
     Task<TEntity> GetByIdAsync(int id);
     Task<int> CreateAsync(TEntity entity);
     Task<int> UpdateAsync(TEntity entity);
-    Task DeleteAsync(int id);
+    Task<int> DeleteAsync(int id);
 }

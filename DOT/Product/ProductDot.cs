@@ -1,3 +1,3 @@
-class CreateProduct : ProductBase
+public class CreateProduct : ProductBase
 {
 }

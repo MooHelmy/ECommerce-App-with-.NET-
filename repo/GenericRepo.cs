@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-public class GenericRepo<TEntity>(AppDbContext Context) : IGeneric<TEntity> where TEntity : class
+public class GenericRepo<TEntity>(ApplicationDbContext Context) : IGeneric<TEntity> where TEntity : class
 
 
 {
@@ -12,7 +12,7 @@ public class GenericRepo<TEntity>(AppDbContext Context) : IGeneric<TEntity> wher
 
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<int> DeleteAsync(int id)
     {
         var entity = await Context.Set<TEntity>().FindAsync(id);
         if (entity == null)
@@ -20,7 +20,7 @@ public class GenericRepo<TEntity>(AppDbContext Context) : IGeneric<TEntity> wher
             throw new ItemNotFoundException($"item with  {id} is not found");
         }
         Context.Set<TEntity>().Remove(entity);
-        await Context.SaveChangesAsync();
+        return await Context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync()
