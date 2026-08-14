@@ -8,7 +8,6 @@ public class ProductServices(IGeneric<Product> productInterface) : IProductServi
         : new ServicesResponse(false, "Product not Added");
     }
 
-
     public async Task<ServicesResponse> DeleteAsync(int id)
     {
         var result = await productInterface.DeleteAsync(id);
@@ -18,25 +17,18 @@ public class ProductServices(IGeneric<Product> productInterface) : IProductServi
 
     public async Task<IEnumerable<GetProduct>> GetAllAsync()
     {
-        var products = await productInterface.GetAllAsync();
+        var products = await productInterface.GetAllAsync(p => p.Category);   // ✅ إضافة Include
         if (!products.Any())
         {
             return [];
         }
         return products.Select(product => product.ProductToGetProductMapper());
-
-
     }
 
     public async Task<GetProduct> GetByIdAsync(int id)
     {
-        var products = await productInterface.GetByIdAsync(id);
-        if (products == null)
-        {
-            throw new ItemNotFoundException($"item with  {id} is not found");
-
-        }
-        return products.ProductToGetProductMapper();
+        var product = await productInterface.GetByIdAsync(id, p => p.Category);   // ✅ إضافة Include
+        return product.ProductToGetProductMapper();
     }
 
     public async Task<ServicesResponse> UpdateAsync(UpdateProduct product)

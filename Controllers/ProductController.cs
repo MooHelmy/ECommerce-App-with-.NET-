@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+
 [ApiController]
 [Route("api/products")]
-public class ProductController(ProductServices productServices) : ControllerBase
-
+public class ProductController(IProductServices productServices) : ControllerBase
 {
     [HttpGet("All")]
-
     public async Task<ActionResult> GetAllAsync()
     {
         var products = await productServices.GetAllAsync();
@@ -33,11 +32,10 @@ public class ProductController(ProductServices productServices) : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete(" Delete/{id}")]
+    [HttpDelete("Delete/{id}")]   // ⚠️ شيلت المسافة الزيادة قبل Delete
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var result = await productServices.DeleteAsync(id);
         return result.Success ? Ok(result) : BadRequest(result);
     }
-
 }

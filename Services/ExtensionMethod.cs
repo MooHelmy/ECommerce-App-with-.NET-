@@ -35,6 +35,7 @@ public static class ExtensionMethod
             Price = product.Price,
             Base64Image = product.ImageUrl,
             Quantity = product.Quantity,
+            CategoryId = product.CategoryId,
             Category = new GetCategory
             {
                 Id = product.CategoryId,

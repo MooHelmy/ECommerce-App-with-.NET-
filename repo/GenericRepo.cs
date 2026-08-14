@@ -1,15 +1,12 @@
-
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 public class GenericRepo<TEntity>(ApplicationDbContext Context) : IGeneric<TEntity> where TEntity : class
-
-
 {
     public async Task<int> CreateAsync(TEntity entity)
     {
         Context.Set<TEntity>().Add(entity);
         return await Context.SaveChangesAsync();
-
     }
 
     public async Task<int> DeleteAsync(int id)
@@ -23,16 +20,28 @@ public class GenericRepo<TEntity>(ApplicationDbContext Context) : IGeneric<TEnti
         return await Context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes)
     {
-        var entities = await Context.Set<TEntity>().AsNoTracking().ToListAsync();
-        // AsNoTracking() تستخدم للتحديث البيانات في قاعدة البيانات بدون تتبع الالمان للتغييرات المصدرية
-        return entities;
+        IQueryable<TEntity> query = Context.Set<TEntity>().AsNoTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        return await query.ToListAsync();
     }
 
-    public async Task<TEntity> GetByIdAsync(int id)
+    public async Task<TEntity?> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes)
     {
-        var entity = await Context.Set<TEntity>().FindAsync(id);
+        IQueryable<TEntity> query = Context.Set<TEntity>();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        var entity = await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         if (entity == null)
         {
             throw new ItemNotFoundException($"item with  {id} is not found");

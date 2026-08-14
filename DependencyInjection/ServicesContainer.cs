@@ -6,30 +6,23 @@ public static class ServicesContainer
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-            // بستخدم السطر ده على يحطلى ملفات الميجراشن فى نفس المكان اللى انا شغال فيه 
-            // بستخدم بالتالي يحطل الملفات فى مجلد bin و المكان اللى انا شغال فيه
             SqlOption =>
              {
                  SqlOption.MigrationsAssembly(typeof(ServicesContainer).Assembly.FullName);
-                 // تعيين الملفات التي تحتاج للمهمة فى الميجراشن
-                 SqlOption.EnableRetryOnFailure(); // تمكين المحاولة عند فشل المهمة
+                 SqlOption.EnableRetryOnFailure();
              }
             ),
-             // تعيين المهمة فى الميجراشن بالتالي من النوع الافتراضي للمهمة و تحتاج للمهمة فى الميجراشن
              ServiceLifetime.Scoped
              );
+
+        // Repositories
         services.AddScoped<IGeneric<Product>, GenericRepo<Product>>();
         services.AddScoped<IGeneric<Category>, GenericRepo<Category>>();
+
+        // Application Services
+        services.AddScoped<IProductServices, ProductServices>();      // ✅ إضافة جديدة
+        services.AddScoped<ICategoryServices, CategoryServices>();    // ✅ إضافة جديدة
+
         return services;
-
-
-
-
-        // services.AddScoped<IConfiguration>(configuration);
-        // services.AddScoped<IUserService, UserService>();
-        // services.AddScoped<IProductService, ProductService>();
-        // services.AddScoped<ICategoryService, CategoryService>();
-        // services.AddScoped<IProductCategoryService, ProductCategoryService>();
-
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-
-public class CategoryControllee(CategoryServices categoryServices) : ControllerBase
+[ApiController]
+[Route("api/categories")]
+public class CategoryControllee(ICategoryServices categoryServices) : ControllerBase
 {
     [HttpGet("All")]
 
@@ -31,7 +32,7 @@ public class CategoryControllee(CategoryServices categoryServices) : ControllerB
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete(" Delete/{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var result = await categoryServices.DeleteAsync(id);

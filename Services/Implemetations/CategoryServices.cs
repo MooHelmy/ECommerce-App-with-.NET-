@@ -1,9 +1,9 @@
 public class CategoryServices(IGeneric<Category> categoryInterface) : ICategoryServices
 {
-    public async Task<ServicesResponse> CreateAsync(CreateCategory Category)
+    public async Task<ServicesResponse> CreateAsync(CreateCategory category)
     {
-        Category CategoryEntity = Category.CategoryToEntityMapper();
-        var result = await categoryInterface.CreateAsync(CategoryEntity);
+        Category categoryEntity = category.CategoryToEntityMapper();
+        var result = await categoryInterface.CreateAsync(categoryEntity);
         return result > 0 ? new ServicesResponse(true, "Category created successfully")
         : new ServicesResponse(false, "Category not Added");
     }
@@ -17,7 +17,7 @@ public class CategoryServices(IGeneric<Category> categoryInterface) : ICategoryS
 
     public async Task<IEnumerable<GetCategory>> GetAllAsync()
     {
-        var categories = await categoryInterface.GetAllAsync();
+        var categories = await categoryInterface.GetAllAsync(c => c.Products);   // ✅ إضافة Include
         if (!categories.Any())
         {
             return [];
@@ -27,24 +27,15 @@ public class CategoryServices(IGeneric<Category> categoryInterface) : ICategoryS
 
     public async Task<GetCategory> GetByIdAsync(int id)
     {
-        var categories = await categoryInterface.GetByIdAsync(id);
-        if (categories == null)
-        {
-            throw new ItemNotFoundException($"item with  {id} is not found");
-
-        }
-        return categories.CategoryToGetCategoryMapper();
+        var category = await categoryInterface.GetByIdAsync(id, c => c.Products);   // ✅ إضافة Include
+        return category.CategoryToGetCategoryMapper();
     }
 
-    public async Task<ServicesResponse> UpdateAsync(UpdateCategory Category)
+    public async Task<ServicesResponse> UpdateAsync(UpdateCategory category)
     {
-        Category CategoryEntity = Category.CategoryToEntityMapper();
-        var result = await categoryInterface.UpdateAsync(CategoryEntity);
+        Category categoryEntity = category.CategoryToEntityMapper();
+        var result = await categoryInterface.UpdateAsync(categoryEntity);
         return result > 0 ? new ServicesResponse(true, "Category updated successfully")
             : new ServicesResponse(false, "Category not updated");
     }
-
 }
-
-
-
