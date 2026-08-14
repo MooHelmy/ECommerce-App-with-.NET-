@@ -1,8 +1,8 @@
 public interface ICategoryServices
 {
-    Task<IEnumerable<GetProduct>> GetAllAsync();
-    Task<GetProduct> GetByIdAsync(int id);
+    Task<IEnumerable<GetCategory>> GetAllAsync();
+    Task<GetCategory> GetByIdAsync(int id);
     Task<ServicesResponse> CreateAsync(CreateCategory Category);
-    Task<ServicesResponse> UpdateAsync(UpdateProduct Category);
+    Task<ServicesResponse> UpdateAsync(UpdateCategory Category);
     Task<ServicesResponse> DeleteAsync(int id);
 }

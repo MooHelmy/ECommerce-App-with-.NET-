@@ -44,4 +44,32 @@ public static class ExtensionMethod
         };
     }
 
-} // public static async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(this IGeneric<TEntity> genericInterface) where TEntity : class
+    // Category  Category Category ///////////////////////////////////
+    public static Category CategoryToEntityMapper(this CreateCategory category)
+    {
+        return new Category
+        {
+            Name = category.Name
+        };
+    }
+
+    public static Category CategoryToEntityMapper(this UpdateCategory category)
+    {
+        return new Category
+        {
+            Id = category.Id,
+            Name = category.Name
+        };
+    }
+
+    public static GetCategory CategoryToGetCategoryMapper(this Category category)
+    {
+        return new GetCategory
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Products = category.Products?.Select(p => p.ProductToGetProductMapper()).ToList() ?? new List<GetProduct>()
+        };
+    }
+
+}
