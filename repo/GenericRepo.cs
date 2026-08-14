@@ -17,7 +17,7 @@ public class GenericRepo<TEntity>(ApplicationDbContext Context) : IGeneric<TEnti
         var entity = await Context.Set<TEntity>().FindAsync(id);
         if (entity == null)
         {
-            throw new ItemNotFoundException($"item with  {id} is not found");
+            return 0;
         }
         Context.Set<TEntity>().Remove(entity);
         return await Context.SaveChangesAsync();
