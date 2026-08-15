@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+: IdentityDbContext<ApplicationUser>(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);   // لازم أول سطر، بتجهز جداول Identity
+
 
         modelBuilder.Entity<Product>(entity =>
     {
@@ -30,7 +34,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .IsRequired()
                 .HasMaxLength(100);
         });
-        base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Product> Products { get; set; }
