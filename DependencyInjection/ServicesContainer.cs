@@ -12,7 +12,7 @@ public static class ServicesContainer
                  SqlOption.EnableRetryOnFailure();
              }
             ),
-             ServiceLifetime.Scoped
+             ServiceExpiryMinutes.Scoped
              );
 
         // Repositories
