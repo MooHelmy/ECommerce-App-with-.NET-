@@ -27,7 +27,7 @@ public class CategoryServices(IGeneric<Category> categoryInterface) : ICategoryS
 
     public async Task<GetCategory> GetByIdAsync(int id)
     {
-        var category = await categoryInterface.GetByIdAsync(id, c => c.Products);   // ✅ إضافة Include
+        var category = await categoryInterface.GetByIdAsync(id, c => c.Products);   //
         return category.CategoryToGetCategoryMapper();
     }
 
