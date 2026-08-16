@@ -11,6 +11,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddServices(builder.Configuration);
 var app = builder.Build();
+await IdentitySeeder.SeedRolesAndAdminAsync(app.Services);
+
 app.UseGlobalExceptionHandling();
 
 // Configure the HTTP request pipeline.

@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/products")]
+[Authorize]
 public class ProductController(IProductServices productServices) : ControllerBase
 {
     [HttpGet("All")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetAllAsync()
     {
         var products = await productServices.GetAllAsync();
@@ -12,6 +15,7 @@ public class ProductController(IProductServices productServices) : ControllerBas
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetByIdAsync(int id)
     {
         var product = await productServices.GetByIdAsync(id);
@@ -19,6 +23,7 @@ public class ProductController(IProductServices productServices) : ControllerBas
     }
 
     [HttpPost("Add")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> CreateAsync(CreateProduct product)
     {
         var result = await productServices.CreateAsync(product);
@@ -26,13 +31,15 @@ public class ProductController(IProductServices productServices) : ControllerBas
     }
 
     [HttpPut("Update")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> UpdateAsync(UpdateProduct product)
     {
         var result = await productServices.UpdateAsync(product);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete("Delete/{id}")]   // ⚠️ شيلت المسافة الزيادة قبل Delete
+    [HttpDelete("Delete/{id}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var result = await productServices.DeleteAsync(id);

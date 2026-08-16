@@ -28,7 +28,13 @@ public class AuthController(IAuthServices authServices) : ControllerBase
         var result = await authServices.LogoutAsync(userId);
         return result.Success ? Ok(result) : BadRequest(result);
     }
-
+    [HttpGet("users")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> GetAllUsers()
+    {
+        var users = await authServices.GetAllUsersAsync();
+        return Ok(users);
+    }
     [HttpPost("refresh-token")]
     public async Task<ActionResult> RefreshToken(RefreshTokenDto dto)
     {
@@ -87,7 +93,7 @@ public class AuthController(IAuthServices authServices) : ControllerBase
     [HttpPost("assign-role")]
     [Authorize(Roles = "Admin")]
     // بضيف الدور للمستخدم المسجل بالفعل
-    public async Task<ActionResult> AssignRole(string userId, string roleName)
+    public async Task<ActionResult> AssignRole([FromQuery] string userId, [FromQuery] string roleName)
     {
         var result = await authServices.AssignRoleAsync(userId, roleName);
         return result.Success ? Ok(result) : BadRequest(result);
@@ -95,7 +101,7 @@ public class AuthController(IAuthServices authServices) : ControllerBase
 
     [HttpDelete("remove-role")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> RemoveRole(string userId, string roleName)
+    public async Task<ActionResult> RemoveRole([FromQuery] string userId, [FromQuery] string roleName)
     {
         var result = await authServices.RemoveRoleAsync(userId, roleName);
         return result.Success ? Ok(result) : BadRequest(result);

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 public class AuthServices(
@@ -203,6 +204,20 @@ public class AuthServices(
         };
 
 
+    }
+    public async Task<IEnumerable<GetProfile>> GetAllUsersAsync()
+    {
+        var users = userManager.Users.ToList();
+
+        return users.Select(u => new GetProfile
+        {
+            Id = u.Id,
+            Email = u.Email,
+            FullName = u.FullName,
+            StreetName = u.StreetName,
+            City = u.City,
+            EmailConfirmed = u.EmailConfirmed
+        });
     }
     public async Task<ServicesResponse> UpdateProfileAsync(string userId, UpdateProfileDto dto)
     {

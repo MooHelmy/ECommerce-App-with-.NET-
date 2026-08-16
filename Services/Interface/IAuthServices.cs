@@ -10,6 +10,7 @@ public interface IAuthServices
     Task<ServicesResponse> ResetPasswordAsync(ResetPasswordDto dto);
     Task<ServicesResponse> ConfirmEmailAsync(string userId, string token);
     Task<ServicesResponse> ChangePasswordAsync(string userId, ChangePasswordDto dto);
+    Task<IEnumerable<GetProfile>> GetAllUsersAsync();
     Task<GetProfile> GetProfileAsync(string userId);
     Task<ServicesResponse> UpdateProfileAsync(string userId, UpdateProfileDto dto);
     Task<ServicesResponse> AssignRoleAsync(string userId, string roleName);

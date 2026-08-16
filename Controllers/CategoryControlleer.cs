@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [Route("api/categories")]
+[Authorize]
 public class CategoryControllee(ICategoryServices categoryServices) : ControllerBase
 {
     [HttpGet("All")]
-
+    [AllowAnonymous]
     public async Task<ActionResult> GetAllAsync()
     {
         var categorys = await categoryServices.GetAllAsync();
@@ -12,6 +14,7 @@ public class CategoryControllee(ICategoryServices categoryServices) : Controller
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetByIdAsync(int id)
     {
         var category = await categoryServices.GetByIdAsync(id);
@@ -19,6 +22,7 @@ public class CategoryControllee(ICategoryServices categoryServices) : Controller
     }
 
     [HttpPost("Add")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> CreateAsync(CreateCategory category)
     {
         var result = await categoryServices.CreateAsync(category);
@@ -26,13 +30,14 @@ public class CategoryControllee(ICategoryServices categoryServices) : Controller
     }
 
     [HttpPut("Update")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> UpdateAsync(UpdateCategory category)
     {
         var result = await categoryServices.UpdateAsync(category);
         return result.Success ? Ok(result) : BadRequest(result);
     }
-
     [HttpDelete("Delete/{id}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var result = await categoryServices.DeleteAsync(id);
